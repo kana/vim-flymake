@@ -1,0 +1,95 @@
+*flymake.txt*	on-the-fly syntax checking
+
+Version: 0.0.1-0
+Originally written by Daisuke Ikegami <ikegami@madscientist.jp>
+Copyright (C) 2008 Daisuke IKEGAMI
+Modified by kana <http://whileimautomaton.net/>
+Copyright (C) 2008 kana <http://whileimautomaton.net/>
+License: Modified BSD License (same as the original one)
+
+
+CONTENTS						*flymake-contents*
+
+Introduction			|flymake-introduction|
+Customizing			|flymake-customizing|
+Functions			|flymake-functions|
+Bugs				|flymake-bugs|
+ChangeLog			|flymake-changelog|
+
+
+
+
+==============================================================================
+INTRODUCTION						*flymake-introduction*
+
+Flymake is a Vim plugin to perform on-the-fly syntax checking for the files
+being edited by using the external syntax checking tool (usually a compiler).
+It also highlights erroneous lines and displays associated error and warning
+messages.  This plugin is a port of 'flymake-mode' for Emacs.
+
+Requirements:
+- Vim 7.0 or later.
+
+
+
+
+==============================================================================
+CUSTOMIZING						*flymake-customizing*
+
+To automatically perform flymake, you have to set up |autocommand| like the
+followings for each 'filetype' you want to do so:
+>
+	autocmd BufWritePost <buffer>  call FlyMake(..., ..., ...)
+	autocmd BufWinLeave <buffer>  call FlyMakeCloseWindows()
+<
+See also |filetype-plugin| included with the package of this plugin.
+
+
+
+
+==============================================================================
+FUNCTIONS						*flymake-functions*
+
+FlyMake({checker}, {err-regexp}, {warn-regexp})			   *FlyMake()*
+	Perform syntax checking for the current buffer.
+
+	{checker} is a string to specify the external command to check syntax;
+	which consists of the format of |printf()|.  It must have two '%s':
+	the former is for a temporary directory, and the latter is for
+	a program file (without path name)
+
+	{err-regexp} is a string to specify the regular expression for error
+	message.  It must have two groupings: the former is a line number for
+	where the error occurred, and the latter is a message for error
+	message.
+
+	{warn-regexp} is like {err-regexp} but for warning message.
+
+FlyMakeCloseWindows()				       *FlyMakeCloseWindows()*
+	Close all windows that show the buffer created by this plugin.
+
+
+
+
+==============================================================================
+BUGS						*flymake-bugs*
+
+- XXX
+
+
+
+
+==============================================================================
+CHANGELOG					*flymake-changelog*
+
+0.0.1-0	2008-05-21T00:40:18+09:00
+	- Add the help file of this plugin based on the original README.
+
+0.0.1	2008-05-15
+	- Original version.
+
+
+
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:
