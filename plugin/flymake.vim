@@ -1,17 +1,10 @@
-" -*- vim -*-
-"
-" Vim global plugin for on-the-fly syntax checker
-" Maintainer: Daisuke Ikegami <ikegami@madscientist.jp>
-"
-" Copyright 2008 Daisuke IKEGAMI
-" Free distribution, use, and modification permitted under BSD3
-"
-" DESCRIPTION:
-"   Performs on-the-fly syntax checks of the files being edited
-"   using the external syntax check tool (usually the compiler).
-"   Highlights erroneous lines and displays associated error
-"   and warning messages. This plugin is a port of 'flymake-mode'
-"   for Emacs.
+" flymake - on-the-fly syntax checking
+" Version: 0.0.1-0
+" Author: Daisuke Ikegami <ikegami@madscientist.jp>
+" Copyright (C) 2008 Daisuke IKEGAMI
+" ModifiedBy: kana <http://whileimautomaton.net/>
+" Copyright (C) 2008 kana <http://whileimautomaton.net/>
+" License: Modified BSD License (same as the original one)
 
 function FlyMakeCloseWindows()
   let bufs = ["*FlyMakeError*", "*FlyMakeWarn*"]
@@ -126,3 +119,5 @@ function FlyMake(checker, err_regexp, warn_regexp)
   " cleanup
   call system("rm -r " . tmp_dir)
 endfunction
+
+" __END__
