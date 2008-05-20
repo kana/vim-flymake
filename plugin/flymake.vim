@@ -46,10 +46,8 @@ endfunction
 function! FlyMakeCloseWindows()
   let bufs = ['*FlyMakeError*', '*FlyMakeWarn*']
   for buf in bufs
-    if buflisted(buf)
-      call s:FlyMakeSendCommand(buf, 'quit!')
-   elseif bufwinnr(buf) != -1
-      call s:FlyMakeSendCommand(buf, 'quit!')
+    if bufexists(buf)
+      call s:FlyMakeSendCommand(buf, bufnr(buf) . 'bwipeout')
     endif
   endfor
 endfunction
@@ -61,16 +59,12 @@ endfunction
 
 function! s:FlyMakeMoveWindow(buf_name, split)
   let cur = winnr()
-  if !buflisted(a:buf_name)
+  if !bufexists(a:buf_name)
     return -1
   else
     let winnr = bufwinnr(a:buf_name)
     if winnr == -1
-      if a:split
-        execute 'split' a:buf_name
-      else
-        execute 'buffer' a:buf_name
-      end
+      execute bufnr(a:buf_name) (a:split ? 'sbuffer' : 'buffer')
     else
       execute winnr 'wincmd w'
     endif
@@ -131,7 +125,9 @@ function! s:FlyMakeDisplay(buf, type, msg, regexp)
 
   execute 'match' a:type "'\\%" . sorted_keys[0] . "l'"
   call cursor(sorted_keys[0], 1)
-  execute '10new' a:buf
+  10 new
+  setlocal bufhidden=wipe buftype=nofile noswapfile
+  file `=a:buf`
   for n in reverse(sorted_keys)
     for mes in reverse(dic[n])
       call s:FlyMakeSendCommand(a:buf,
