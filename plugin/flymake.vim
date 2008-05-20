@@ -17,8 +17,8 @@ endif
 
 function! FlyMake(checker, err_regexp, warn_regexp)
   " set local variable
-  let source_file = "%"
-  let build_dir   = expand("%:p:h")
+  let source_file = '%'
+  let build_dir   = expand('%:p:h')
 
   call FlyMakeCloseWindows()
 
@@ -26,29 +26,30 @@ function! FlyMake(checker, err_regexp, warn_regexp)
   let tmp_dir = s:FlyMakeTemporaryDirectory(build_dir)
 
   " run the external syntax checker command
-  let command  = printf(a:checker, tmp_dir, expand("%:p:t"))
+  let command  = printf(a:checker, tmp_dir, expand('%:p:t'))
   let messages = split(system(command), '\n')
 
   " find erroneous lines by parsing the result string (maybe multi lines)
-  let num_errors = s:FlyMakeDisplay("*FlyMakeError*", "Error", messages, a:err_regexp)
+  let num_errors = s:FlyMakeDisplay('*FlyMakeError*', 'Error', messages,
+  \                                 a:err_regexp)
 
   " for each warning message, display it and highlight erroneous line
   if num_errors == 0
-    call s:FlyMakeDisplay("*FlyMakeWarn*", "Todo", messages, a:warn_regexp)
+    call s:FlyMakeDisplay('*FlyMakeWarn*', 'Todo', messages, a:warn_regexp)
   endif
 
   " cleanup
-  call system("rm -r " . tmp_dir)
+  call system('rm -r ' . tmp_dir)
 endfunction
 
 
 function! FlyMakeCloseWindows()
-  let bufs = ["*FlyMakeError*", "*FlyMakeWarn*"]
+  let bufs = ['*FlyMakeError*', '*FlyMakeWarn*']
   for buf in bufs
     if buflisted(buf)
-      call s:FlyMakeSendCommand(buf, "quit!")
+      call s:FlyMakeSendCommand(buf, 'quit!')
    elseif bufwinnr(buf) != -1
-      call s:FlyMakeSendCommand(buf, "quit!")
+      call s:FlyMakeSendCommand(buf, 'quit!')
     endif
   endfor
 endfunction
@@ -66,12 +67,12 @@ function! s:FlyMakeMoveWindow(buf_name, split)
     let winnr = bufwinnr(a:buf_name)
     if winnr == -1
       if a:split
-        execute "sp " . a:buf_name
+        execute 'split' a:buf_name
       else
-        execute "b " . a:buf_name
+        execute 'buffer' a:buf_name
       end
     else
-      execute winnr . "wincmd w"
+      execute winnr 'wincmd w'
     endif
   endif
   return cur
@@ -82,9 +83,9 @@ function! s:FlyMakeSendCommand(buf_name, cmd)
   let cur = s:FlyMakeMoveWindow(a:buf_name, 1)
   if cur != -1
     execute a:cmd
-    execute cur . "wincmd w"
+    execute cur 'wincmd w'
   else
-    echo "s:FlyMakeSendCommand : " a:buf_name . " not exists."
+    echo 's:FlyMakeSendCommand :' a:buf_name 'does not exist.'
   endif
 endfunction
 
@@ -108,8 +109,8 @@ endfunction
 
 
 function! s:FlyMakeTemporaryDirectory(dir)
-  let tmp_dir = substitute(system("mktemp -d"), '\r\|\n', '', "g")
-  call system("cp -a " . a:dir . "/* " . tmp_dir)
+  let tmp_dir = substitute(system('mktemp -d'), '\r\|\n', '', 'g')
+  call system('cp -a ' . a:dir . '/* ' . tmp_dir)
   return tmp_dir
 endfunction
 
@@ -126,17 +127,19 @@ function! s:FlyMakeDisplay(buf, type, msg, regexp)
   if len(keys(dic)) == 0
     return 0
   endif
-  let sorted_keys = sort(keys(dic), "s:FlyMakeNumberSort")
+  let sorted_keys = sort(keys(dic), function('s:FlyMakeNumberSort'))
 
-  execute "match " . a:type . " '\\%" . sorted_keys[0] . "l'"
+  execute 'match' a:type "'\\%" . sorted_keys[0] . "l'"
   call cursor(sorted_keys[0], 1)
-  execute "10new " . a:buf
+  execute '10new' a:buf
   for n in reverse(sorted_keys)
     for mes in reverse(dic[n])
-      call s:FlyMakeSendCommand(a:buf, "call append(line($), \"" . n . ": " . a:type . " " . escape(mes, '()') . "\")")
+      call s:FlyMakeSendCommand(a:buf,
+      \                         ('call append(line($), "' . n . ': '
+      \                          . a:type . ' ' . escape(mes, '()') . '")'))
     endfor
   endfor
-  call s:FlyMakeSendCommand(a:buf, "call cursor(1, 1)")
+  call s:FlyMakeSendCommand(a:buf, 'call cursor(1, 1)')
   return len(keys(dic))
 endfunction
 
