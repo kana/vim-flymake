@@ -6,7 +6,14 @@
 " Copyright (C) 2008 kana <http://whileimautomaton.net/>
 " License: Modified BSD License (same as the original one)
 
-function FlyMakeCloseWindows()
+if exists('g:loaded_flymake') && g:loaded_flymake
+  finish
+endif
+
+
+
+
+function! FlyMakeCloseWindows()
   let bufs = ["*FlyMakeError*", "*FlyMakeWarn*"]
   for buf in bufs
     if buflisted(buf)
@@ -94,7 +101,7 @@ function! FlyMakeDisplay(buf, type, msg, regexp)
   return len(keys(dic))
 endfunction
 
-function FlyMake(checker, err_regexp, warn_regexp)
+function! FlyMake(checker, err_regexp, warn_regexp)
   " set local variable
   let source_file = "%"
   let build_dir   = expand("%:p:h")
@@ -119,5 +126,10 @@ function FlyMake(checker, err_regexp, warn_regexp)
   " cleanup
   call system("rm -r " . tmp_dir)
 endfunction
+
+
+
+
+let g:loaded_flymake = 1
 
 " __END__
