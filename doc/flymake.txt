@@ -84,6 +84,13 @@ CHANGELOG					*flymake-changelog*
 
 0.0.1-0	2008-05-21T00:40:18+09:00
 	- Add the help file of this plugin based on the original README.
+	- Fix improper code of attached filetype plugins:
+	  - Move to after/ftplugins directory, because they should be loaded
+	    after any other filetype plugins.
+	  - Rename as {filetype}/flymake.vim.
+	  - Remove unnecessary |:set|.
+	  - Modify to avoid doubly sourcing by b:did_flymake.
+	  - Fix the patterns for |:autocmd|.  It must be <buffer>.
 
 0.0.1	2008-05-15
 	- Original version.
