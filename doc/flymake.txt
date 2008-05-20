@@ -91,6 +91,10 @@ CHANGELOG					*flymake-changelog*
 	  - Remove unnecessary |:set|.
 	  - Modify to avoid doubly sourcing by b:did_flymake.
 	  - Fix the patterns for |:autocmd|.  It must be <buffer>.
+	- Fix several bugs in the global plugin:
+	  - Fix the treatment of fancy buffer name such as "*FlyMakeError*".
+	  - Fix misusage of |buflisted()|.
+	  - ...
 
 0.0.1	2008-05-15
 	- Original version.
